@@ -1,188 +1,105 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import {
-  Sparkles,
-  Target,
-  Megaphone,
-  TrendingUp,
-  ArrowUpRight,
-  Plus,
-  Zap,
-  CheckCircle2,
-  Clock,
-  Layers,
-  ShieldCheck,
-  Calendar,
-} from 'lucide-react';
+import { Rocket, Sparkles, Check, ArrowRight, Shield, Layers, Zap, Target, BarChart2 } from 'lucide-react';
 
-export default function B2BDashboardPage() {
-  const [workspace, setWorkspace] = useState<any>(null);
-  const [campaigns, setCampaigns] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async () => {
-    try {
-      const res = await fetch('/api/dashboard');
-      const data = await res.json();
-      if (data.workspace) setWorkspace(data.workspace);
-      if (Array.isArray(data.campaigns)) setCampaigns(data.campaigns);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-sky-500"></div>
-      </div>
-    );
-  }
-
+export default function PublicLandingPage() {
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
-      {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
-        <div>
-          <div className="flex items-center gap-2 text-xs font-bold text-sky-400 uppercase tracking-wider mb-1">
-            <ShieldCheck className="w-4 h-4" /> Brand Source of Truth Active
-          </div>
-          <h1 className="text-3xl font-extrabold text-slate-100 tracking-tight">
-            Good morning, Abdulbasit
-          </h1>
-          <p className="text-slate-400 text-sm mt-1">
-            Here's what is happening with your marketing operation today.
-          </p>
-        </div>
-
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-sky-500 selection:text-slate-950">
+      {/* Navigation Bar */}
+      <header className="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-slate-800/80">
         <div className="flex items-center gap-3">
-          <Link
-            href="/content"
-            className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-300 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 transition-colors"
-          >
-            Generate Content
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 via-indigo-500 to-amber-500 flex items-center justify-center text-slate-950 font-bold shadow-lg shadow-sky-500/20">
+            <Rocket className="w-5 h-5" />
+          </div>
+          <span className="font-extrabold text-lg text-slate-100 tracking-tight">LaunchDeck</span>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <Link href="/login" className="text-xs font-bold text-slate-300 hover:text-white transition-colors">
+            Log In
           </Link>
           <Link
-            href="/campaigns"
-            className="px-5 py-2.5 rounded-xl text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white shadow-lg shadow-sky-600/20 transition-all flex items-center gap-2"
+            href="/signup"
+            className="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-sky-600/20 transition-all"
           >
-            <Plus className="w-4 h-4" /> Create Campaign
+            Start Free →
           </Link>
         </div>
-      </div>
+      </header>
 
-      {/* KPI Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          { label: 'Published Content', value: '24', change: '+18% this month', icon: Megaphone, color: 'text-sky-400' },
-          { label: 'Avg Engagement Rate', value: '4.8%', change: '+1.2% this week', icon: TrendingUp, color: 'text-emerald-400' },
-          { label: 'Leads Generated', value: '142', change: '+32 vs last week', icon: Target, color: 'text-indigo-400' },
-          { label: 'Active Campaigns', value: String(campaigns.length || 1), change: '100% on schedule', icon: Layers, color: 'text-amber-400' },
-        ].map((stat, idx) => {
-          const Icon = stat.icon;
-          return (
-            <div key={idx} className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-400">{stat.label}</span>
-                <Icon className={`w-4 h-4 ${stat.color}`} />
-              </div>
-              <div className="text-2xl font-extrabold text-slate-100">{stat.value}</div>
-              <span className="text-[10px] font-semibold text-slate-500">{stat.change}</span>
+      {/* Hero Section */}
+      <section className="max-w-5xl mx-auto px-6 pt-20 pb-16 text-center space-y-6">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-bold uppercase tracking-wider">
+          <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Market Ready AI Marketing OS v2.0
+        </div>
+
+        <h1 className="text-4xl sm:text-6xl font-extrabold text-slate-100 tracking-tight leading-tight">
+          Your AI marketing team,<br />
+          <span className="bg-gradient-to-r from-sky-400 via-indigo-400 to-amber-400 bg-clip-text text-transparent">
+            in one workspace.
+          </span>
+        </h1>
+
+        <p className="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed">
+          Plan campaigns, create multi-channel content, engage your audience, and understand what's working without juggling a dozen fragmented tools.
+        </p>
+
+        <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link
+            href="/signup"
+            className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-extrabold text-sm rounded-xl shadow-xl shadow-sky-600/25 flex items-center justify-center gap-2"
+          >
+            Start Free <ArrowRight className="w-4 h-4" />
+          </Link>
+          <Link
+            href="/dashboard"
+            className="w-full sm:w-auto px-8 py-3.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 font-bold text-sm rounded-xl flex items-center justify-center gap-2"
+          >
+            Open Live Workspace Demo
+          </Link>
+        </div>
+      </section>
+
+      {/* Tool Comparison Section */}
+      <section className="max-w-5xl mx-auto px-6 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-100">Stop managing marketing across 10 different tools.</h2>
+          <p className="text-xs sm:text-sm text-slate-400 mt-2">Replace fragmented workflows with a single unified operating loop.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Before */}
+          <div className="p-6 rounded-2xl bg-slate-900/60 border border-rose-500/20 space-y-4">
+            <span className="text-xs font-bold text-rose-400 uppercase tracking-wider block">Before LaunchDeck (Fragmented Stack)</span>
+            <div className="grid grid-cols-2 gap-2 text-xs text-slate-400 font-mono">
+              <div className="p-2 rounded bg-slate-950 border border-slate-800">❌ ChatGPT</div>
+              <div className="p-2 rounded bg-slate-950 border border-slate-800">❌ Canva</div>
+              <div className="p-2 rounded bg-slate-950 border border-slate-800">❌ Notion</div>
+              <div className="p-2 rounded bg-slate-950 border border-slate-800">❌ Buffer</div>
+              <div className="p-2 rounded bg-slate-950 border border-slate-800">❌ Apollo</div>
+              <div className="p-2 rounded bg-slate-950 border border-slate-800">❌ Google Sheets</div>
             </div>
-          );
-        })}
-      </div>
-
-      {/* AI Performance Intelligence Recommendations */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-sky-950/40 via-slate-900 to-slate-900 border border-sky-500/20 space-y-3">
-        <div className="flex items-center gap-2 text-xs font-extrabold text-sky-400 uppercase tracking-wider">
-          <Sparkles className="w-4 h-4 text-amber-400" /> AI Performance Intelligence Recommendations
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-          <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800">
-            <span className="font-bold text-slate-200 block mb-1">📈 High Engagement Trigger</span>
-            <span className="text-slate-400">Your LinkedIn posts generated 42% more engagement when leading with founder stories.</span>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800">
-            <span className="font-bold text-slate-200 block mb-1">🎯 Audience Preference</span>
-            <span className="text-slate-400">Your audience responds 2.4x better to 5-slide visual carousels than text threads.</span>
-          </div>
-
-          <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800">
-            <span className="font-bold text-slate-200 block mb-1">📅 Schedule Alert</span>
-            <span className="text-slate-400">You have 4 scheduled posts remaining this week. Keep campaign momentum strong.</span>
+          {/* After */}
+          <div className="p-6 rounded-2xl bg-gradient-to-b from-sky-950/40 to-slate-900 border border-sky-500/30 space-y-4 shadow-xl shadow-sky-500/10">
+            <span className="text-xs font-bold text-sky-400 uppercase tracking-wider block">After LaunchDeck (Unified Marketing OS)</span>
+            <div className="space-y-2 text-xs text-slate-200">
+              <div className="flex items-center gap-2 font-bold"><Check className="w-4 h-4 text-emerald-400" /> Brand Source of Truth</div>
+              <div className="flex items-center gap-2 font-bold"><Check className="w-4 h-4 text-emerald-400" /> Goal-Driven 14-Day Campaigns</div>
+              <div className="flex items-center gap-2 font-bold"><Check className="w-4 h-4 text-emerald-400" /> Multi-Platform Content & 5-Slide Carousels</div>
+              <div className="flex items-center gap-2 font-bold"><Check className="w-4 h-4 text-emerald-400" /> Social Inbox & Automated Comment Replies</div>
+              <div className="flex items-center gap-2 font-bold"><Check className="w-4 h-4 text-emerald-400" /> Growth Performance Intelligence</div>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Active Campaigns & Content Pipeline */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Active Campaigns (2 cols) */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
-              <Target className="w-4 h-4 text-sky-400" /> Active Marketing Campaigns
-            </h2>
-            <Link href="/campaigns" className="text-xs font-semibold text-sky-400 hover:underline">
-              View All Campaigns →
-            </Link>
-          </div>
-
-          <div className="space-y-3">
-            {campaigns.length === 0 ? (
-              <div className="p-8 text-center bg-slate-900 border border-slate-800 rounded-2xl text-xs text-slate-500">
-                No active campaigns. Launch one in 1 click!
-              </div>
-            ) : (
-              campaigns.map((c) => (
-                <div key={c.id} className="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-4">
-                  <div>
-                    <h3 className="font-bold text-sm text-slate-200">{c.name}</h3>
-                    <p className="text-xs text-slate-400 mt-0.5">Goal: {c.objective} • Offer: {c.offer || 'Product Demo'}</p>
-                  </div>
-                  <Link
-                    href={`/campaigns/${c.id}`}
-                    className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-sky-400 text-xs font-semibold rounded-lg flex items-center gap-1"
-                  >
-                    Open <ArrowUpRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-
-        {/* Content Pipeline Status (1 col) */}
-        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-          <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-indigo-400" /> Content Pipeline
-          </h2>
-
-          <div className="space-y-3 text-xs">
-            {[
-              { stage: 'Ideas / Topics', count: '12 Items', color: 'text-slate-400' },
-              { stage: 'Drafts in Progress', count: '5 Items', color: 'text-amber-400' },
-              { stage: 'Scheduled for Release', count: '4 Items', color: 'text-sky-400' },
-              { stage: 'Published This Week', count: '8 Items', color: 'text-emerald-400' },
-            ].map((p, idx) => (
-              <div key={idx} className="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800/80">
-                <span className="font-semibold text-slate-300">{p.stage}</span>
-                <span className={`font-bold ${p.color}`}>{p.count}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      {/* Footer */}
+      <footer className="max-w-7xl mx-auto px-6 py-8 border-t border-slate-800 text-center text-xs text-slate-500">
+        © 2026 LaunchDeck OS. All rights reserved.
+      </footer>
     </div>
   );
 }

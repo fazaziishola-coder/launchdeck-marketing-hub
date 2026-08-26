@@ -26,6 +26,11 @@ export default function Navigation() {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<any>(null);
 
+  // Hide sidebar on root landing page, signup, login, onboarding
+  if (['/', '/landing', '/login', '/signup', '/onboarding'].includes(pathname)) {
+    return null;
+  }
+
   useEffect(() => {
     fetch('/api/auth/me')
       .then((res) => res.json())
@@ -44,7 +49,7 @@ export default function Navigation() {
   };
 
   const workspaceLinks = [
-    { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Brand Hub', href: '/brand', icon: ShieldCheck, badge: 'TRUTH' },
     { name: 'Campaigns Engine', href: '/campaigns', icon: Target },
     { name: 'Content Studio', href: '/content', icon: Sparkles },
