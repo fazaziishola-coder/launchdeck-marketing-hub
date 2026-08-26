@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Rocket, Globe, Target, Sparkles, Check, ArrowRight, ArrowLeft, Layers, ShieldCheck, RefreshCw } from 'lucide-react';
+import { Rocket, Globe, Target, Sparkles, Check, ArrowRight, ArrowLeft, Layers, ShieldCheck, RefreshCw, Github } from 'lucide-react';
 
 export default function OnboardingWizard() {
   const router = useRouter();
@@ -10,6 +10,7 @@ export default function OnboardingWizard() {
 
   // Form State
   const [category, setCategory] = useState('SAAS');
+  const [githubUser, setGithubUser] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [websiteUrl, setWebsiteUrl] = useState('');
   const [description, setDescription] = useState('');
@@ -20,6 +21,9 @@ export default function OnboardingWizard() {
   const [toneOfVoice, setToneOfVoice] = useState('Authoritative & Direct');
   const [brandColor, setBrandColor] = useState('#0284c7');
 
+  const [githubScanning, setGithubScanning] = useState(false);
+  const [discoveredRepos, setDiscoveredRepos] = useState<any[]>([]);
+
   const [analyzing, setAnalyzing] = useState(false);
   const [synthesizedBrand, setSynthesizedBrand] = useState<any>(null);
 
@@ -28,6 +32,37 @@ export default function OnboardingWizard() {
       setChannels(channels.filter((c) => c !== ch));
     } else {
       setChannels([...channels, ch]);
+    }
+  };
+
+  const handleGitHubScan = async () => {
+    if (!githubUser.trim()) return;
+    setGithubScanning(true);
+    try {
+      const res = await fetch(`/api/agent/discover-github?username=${encodeURIComponent(githubUser.trim())}`);
+      const data = await res.json();
+      if (Array.isArray(data.repos) && data.repos.length > 0) {
+        setDiscoveredRepos(data.repos);
+        const top = data.repos[0];
+        if (top) {
+          setCompanyName(top.name);
+          setWebsiteUrl(top.websiteUrl || `https://github.com/${githubUser}/${top.name}`);
+          setDescription(top.description || `${top.name} project discovered automatically from GitHub.`);
+          setIndustry(top.techStack ? `${top.techStack} Software` : 'SaaS / Developer Tool');
+          setTargetAudience('Developers & Tech Founders');
+        }
+
+        // Auto-register into database
+        fetch('/api/agent/discover-github', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ repos: data.repos }),
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setGithubScanning(false);
     }
   };
 
@@ -159,7 +194,37 @@ export default function OnboardingWizard() {
           <div className="p-8 rounded-2xl bg-slate-900 border border-slate-800 space-y-6">
             <div>
               <h2 className="text-2xl font-extrabold text-slate-100">Tell us about your business</h2>
-              <p className="text-sm text-slate-400 mt-1">This context forms the baseline of your AI Brand Source of Truth.</p>
+              <p className="text-sm text-slate-400 mt-1">Connect your GitHub to auto-detect your software projects, or enter manually.</p>
+            </div>
+
+            {/* GitHub Auto-Discovery Bar */}
+            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+              <label className="block text-xs font-bold text-sky-400 flex items-center gap-1.5">
+                <Github className="w-4 h-4" /> Auto-Identify Projects via GitHub
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="Enter GitHub username or organization (e.g. fazaziishola-coder)..."
+                  value={githubUser}
+                  onChange={(e) => setGithubUser(e.target.value)}
+                  className="flex-1 px-3.5 py-2 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-sky-500 font-mono"
+                />
+                <button
+                  type="button"
+                  onClick={handleGitHubScan}
+                  disabled={githubScanning || !githubUser.trim()}
+                  className="px-4 py-2 bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white font-bold text-xs rounded-lg flex items-center gap-1.5"
+                >
+                  {githubScanning ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                  Auto-Detect Repos
+                </button>
+              </div>
+              {discoveredRepos.length > 0 && (
+                <div className="text-[10px] text-emerald-400 font-semibold pt-1">
+                  ✓ Found and registered {discoveredRepos.length} GitHub repositories! Auto-filled project details below.
+                </div>
+              )}
             </div>
 
             <div className="space-y-4">
