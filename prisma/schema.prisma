@@ -1,0 +1,84 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Product {
+  id                  String                @id @default(uuid())
+  name                String
+  slug                String                @unique
+  tagline             String
+  description         String
+  status              String                @default("BUILDING") // IDEA, BUILDING, PRE_LAUNCH, LAUNCHED, SUNSET
+  websiteUrl          String?
+  repoUrl             String?
+  techStack           String?
+  targetAudience      String?
+  pricingModel        String?               @default("Freemium")
+  monthlyRevenue      Float                 @default(0)
+  totalUsers          Int                   @default(0)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  campaigns           MarketingCampaign[]
+  checklistItems      ChecklistItem[]
+  directorySubmissions DirectorySubmission[]
+  metricLogs          MetricLog[]
+}
+
+model MarketingCampaign {
+  id            String    @id @default(uuid())
+  productId     String
+  product       Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  title         String
+  channel       String    // TWITTER, REDDIT, PRODUCT_HUNT, LINKEDIN, NEWSLETTER, COLD_EMAIL
+  scheduledDate DateTime?
+  status        String    @default("DRAFT") // DRAFT, SCHEDULED, PUBLISHED
+  content       String
+  notes         String?
+  impressions   Int       @default(0)
+  clicks        Int       @default(0)
+  conversions   Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model ChecklistItem {
+  id          String    @id @default(uuid())
+  productId   String
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  stage       String    @default("PRE_LAUNCH") // PRE_LAUNCH, LAUNCH_DAY, POST_LAUNCH
+  task        String
+  category    String    @default("General")
+  isCompleted Boolean   @default(false)
+  dueDate     DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model DirectorySubmission {
+  id            String    @id @default(uuid())
+  productId     String
+  product       Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  directoryName String
+  directoryUrl  String
+  status        String    @default("NOT_STARTED") // NOT_STARTED, SUBMITTED, APPROVED, REJECTED
+  submissionUrl String?
+  domainRating  Int?
+  notes         String?
+  submittedAt   DateTime?
+  createdAt     DateTime  @default(now())
+}
+
+model MetricLog {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  date      DateTime @default(now())
+  visitors  Int      @default(0)
+  signups   Int      @default(0)
+  mrr       Float    @default(0)
+  notes     String?
+}
