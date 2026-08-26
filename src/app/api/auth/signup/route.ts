@@ -1,9 +1,20 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { hashPassword, createSession } from '@/lib/auth';
+import { checkRateLimit } from '@/lib/rateLimit';
 
 export async function POST(req: Request) {
   try {
+    const ip = req.headers.get('x-forwarded-for') || 'auth-ip';
+    const rateLimit = checkRateLimit(`signup-${ip}`, 5, 60 * 1000); // 5 signups per min
+
+    if (!rateLimit.success) {
+      return NextResponse.json(
+        { error: 'Too many account creation attempts. Please try again in 1 minute.' },
+        { status: 429 }
+      );
+    }
+
     const { email, password, name, companyName } = await req.json();
 
     if (!email || !password) {
