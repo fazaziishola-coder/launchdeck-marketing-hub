@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Navigation from '@/components/Navigation';
+import AICopilot from '@/components/AICopilot';
 
 export const metadata: Metadata = {
-  title: 'LaunchDeck - Serial Builder Marketing & Product Hub',
-  description: 'Track, launch, and market your suite of products across channels.',
+  title: 'LaunchDeck - AI Marketing Operating System',
+  description: 'Plan, create, and execute your marketing from one AI-powered workspace.',
 };
 
 export default function RootLayout({
@@ -19,6 +20,7 @@ export default function RootLayout({
         <main className="flex-1 p-8 overflow-y-auto max-w-7xl mx-auto">
           {children}
         </main>
+        <AICopilot />
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { DEFAULT_DIRECTORIES, DEFAULT_LAUNCH_CHECKLIST } from '@/lib/initialData';
+import { getOrCreateDefaultWorkspace } from '@/lib/workspace';
 
 export async function GET(req: Request) {
   try {
@@ -45,6 +45,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'No repos provided for registration' }, { status: 400 });
     }
 
+    const workspace = await getOrCreateDefaultWorkspace();
     const newlyRegistered = [];
 
     for (const r of repos) {
@@ -56,6 +57,7 @@ export async function POST(req: Request) {
 
       const product = await db.product.create({
         data: {
+          workspaceId: workspace.id,
           name: r.name,
           slug: `${r.slug}-${Date.now().toString().slice(-4)}`,
           tagline: r.tagline || 'Discovered from GitHub',
@@ -70,32 +72,6 @@ export async function POST(req: Request) {
           totalUsers: r.stars || 0,
         },
       });
-
-      // Populate default launch checklist
-      for (const item of DEFAULT_LAUNCH_CHECKLIST) {
-        await db.checklistItem.create({
-          data: {
-            productId: product.id,
-            stage: item.stage,
-            category: item.category,
-            task: item.task,
-          },
-        });
-      }
-
-      // Populate default directories
-      for (const dir of DEFAULT_DIRECTORIES) {
-        await db.directorySubmission.create({
-          data: {
-            productId: product.id,
-            directoryName: dir.directoryName,
-            directoryUrl: dir.directoryUrl,
-            domainRating: dir.domainRating,
-            notes: dir.notes,
-            status: 'NOT_STARTED',
-          },
-        });
-      }
 
       newlyRegistered.push(product);
     }

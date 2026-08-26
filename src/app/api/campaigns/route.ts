@@ -1,45 +1,40 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { getOrCreateDefaultWorkspace } from '@/lib/workspace';
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(req.url);
-    const productId = searchParams.get('productId');
-
-    const campaigns = await db.marketingCampaign.findMany({
-      where: productId ? { productId } : undefined,
-      include: { product: { select: { name: true, slug: true } } },
-      orderBy: { updatedAt: 'desc' },
+    const workspace = await getOrCreateDefaultWorkspace();
+    const campaigns = await db.campaign.findMany({
+      where: { workspaceId: workspace.id },
+      include: { contentItems: true },
+      orderBy: { createdAt: 'desc' },
     });
     return NextResponse.json(campaigns);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch campaigns', details: String(error) }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch campaigns' }, { status: 500 });
   }
 }
 
 export async function POST(req: Request) {
   try {
+    const workspace = await getOrCreateDefaultWorkspace();
     const body = await req.json();
-    const { productId, title, channel, status, content, notes, scheduledDate } = body;
 
-    if (!productId || !title || !channel || !content) {
-      return NextResponse.json({ error: 'ProductId, title, channel, and content are required' }, { status: 400 });
-    }
-
-    const campaign = await db.marketingCampaign.create({
+    const campaign = await db.campaign.create({
       data: {
-        productId,
-        title,
-        channel,
-        status: status || 'DRAFT',
-        content,
-        notes: notes || null,
-        scheduledDate: scheduledDate ? new Date(scheduledDate) : null,
+        workspaceId: workspace.id,
+        name: body.name,
+        objective: body.objective || 'GENERATE_LEADS',
+        status: body.status || 'ACTIVE',
+        targetAudience: body.targetAudience || 'Target persona',
+        offer: body.offer || null,
+        channels: body.channels || 'LINKEDIN,TWITTER',
       },
     });
 
-    return NextResponse.json(campaign, { status: 201 });
+    return NextResponse.json(campaign);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create campaign', details: String(error) }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to create campaign' }, { status: 500 });
   }
 }

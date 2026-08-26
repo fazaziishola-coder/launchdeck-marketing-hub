@@ -1,196 +1,118 @@
 import fs from 'fs';
 import path from 'path';
 import { db } from '../db';
-import { DEFAULT_DIRECTORIES, DEFAULT_LAUNCH_CHECKLIST } from '../initialData';
+import { getOrCreateDefaultWorkspace } from '../workspace';
 
 export interface DiscoveredProject {
-  folderName: string;
   name: string;
   slug: string;
   tagline: string;
   description: string;
+  path: string;
   techStack: string;
-  websiteUrl?: string;
-  repoUrl?: string;
-  targetAudience: string;
-  status: string;
-  isRegistered: boolean;
+  repositoryUrl?: string;
+  hasReadme: boolean;
 }
 
-export async function scanLocalProjectsFolder(projectsDir: string): Promise<DiscoveredProject[]> {
+export async function scanLocalProjectsDirectory(parentDirPath: string): Promise<DiscoveredProject[]> {
   const discovered: DiscoveredProject[] = [];
 
-  if (!fs.existsSync(projectsDir)) {
-    console.warn(`[Discovery Agent] Path does not exist: ${projectsDir}`);
-    return discovered;
+  if (!fs.existsSync(parentDirPath)) {
+    console.warn(`[Discovery Agent] Path does not exist: ${parentDirPath}`);
+    return [];
   }
 
-  const entries = fs.readdirSync(projectsDir, { withFileTypes: true });
+  const entries = fs.readdirSync(parentDirPath, { withFileTypes: true });
 
   for (const entry of entries) {
-    if (!entry.isDirectory() || entry.name.startsWith('.') || entry.name === 'node_modules') continue;
+    if (!entry.isDirectory()) continue;
+    if (entry.name.startsWith('.') || entry.name === 'node_modules') continue;
 
-    const fullPath = path.join(projectsDir, entry.name);
-    const packageJsonPath = path.join(fullPath, 'package.json');
-    const readmePath = path.join(fullPath, 'README.md');
-    const pyprojectPath = path.join(fullPath, 'pyproject.toml');
-
+    const projectPath = path.join(parentDirPath, entry.name);
     let name = entry.name;
-    let description = '';
-    let tagline = '';
-    let techStackParts: string[] = [];
-    let websiteUrl = '';
-    let repoUrl = '';
+    let description = `${name} project discovered locally on machine.`;
+    let tagline = `Innovative ${name} tool`;
+    let techStack = 'JavaScript/TypeScript';
+    let hasReadme = false;
 
-    // Inspect package.json if present
+    // Check package.json
+    const packageJsonPath = path.join(projectPath, 'package.json');
     if (fs.existsSync(packageJsonPath)) {
       try {
-        const pkgContent = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-        if (pkgContent.name) name = pkgContent.name.replace(/^@[^/]+\//, '');
-        if (pkgContent.description) description = pkgContent.description;
+        const pkgData = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+        if (pkgData.name) name = pkgData.name;
+        if (pkgData.description) description = pkgData.description;
+        tagline = pkgData.description ? pkgData.description.slice(0, 80) : tagline;
 
-        const deps = { ...pkgContent.dependencies, ...pkgContent.devDependencies };
-        if (deps.next) techStackParts.push('Next.js');
-        if (deps.react) techStackParts.push('React');
-        if (deps.typescript) techStackParts.push('TypeScript');
-        if (deps.tailwindcss) techStackParts.push('Tailwind CSS');
-        if (deps['@prisma/client'] || deps.prisma) techStackParts.push('Prisma/SQLite');
-        if (deps.express) techStackParts.push('Express');
-        if (deps.vue) techStackParts.push('Vue');
-        if (deps.svelte) techStackParts.push('Svelte');
-        if (deps.electron || deps['@tauri-apps/api']) techStackParts.push('Desktop App');
-
-        if (pkgContent.homepage) websiteUrl = pkgContent.homepage;
-        if (pkgContent.repository) {
-          repoUrl = typeof pkgContent.repository === 'string' ? pkgContent.repository : pkgContent.repository.url || '';
-        }
+        const deps = { ...(pkgData.dependencies || {}), ...(pkgData.devDependencies || {}) };
+        const stackList: string[] = [];
+        if (deps.next) stackList.push('Next.js');
+        if (deps.react) stackList.push('React');
+        if (deps.prisma || deps['@prisma/client']) stackList.push('Prisma');
+        if (deps.tailwindcss) stackList.push('Tailwind');
+        if (deps.typescript) stackList.push('TypeScript');
+        if (stackList.length > 0) techStack = stackList.join(', ');
       } catch (e) {
-        console.error(`[Discovery Agent] Error parsing package.json in ${entry.name}`, e);
+        // ignore parse error
       }
     }
 
-    // Inspect pyproject.toml if present
-    if (fs.existsSync(pyprojectPath)) {
-      techStackParts.push('Python');
-    }
-
-    // Inspect README.md for tagline
+    // Check README.md
+    const readmePath = path.join(projectPath, 'README.md');
     if (fs.existsSync(readmePath)) {
-      try {
-        const readmeText = fs.readFileSync(readmePath, 'utf8');
-        const lines = readmeText.split('\n').map((l) => l.trim()).filter(Boolean);
-        const headingIndex = lines.findIndex((l) => l.startsWith('# '));
-        if (headingIndex !== -1 && lines[headingIndex + 1]) {
-          tagline = lines[headingIndex + 1].replace(/^[#>*-\s]+/, '');
-        }
-      } catch (e) {
-        console.error(`[Discovery Agent] Error reading README in ${entry.name}`, e);
-      }
+      hasReadme = true;
     }
 
-    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-    if (!tagline) tagline = description || `Modern ${techStackParts.join(', ') || 'Software'} Application`;
-    if (!description) description = `${name} project discovered from local directory ${entry.name}.`;
-
-    // Check if project already exists in SQLite DB
-    const existing = await db.product.findFirst({
-      where: {
-        OR: [{ slug }, { name: { equals: name } }],
-      },
-    });
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
     discovered.push({
-      folderName: entry.name,
-      name: capitalize(name.replace(/[-_]/g, ' ')),
+      name,
       slug,
       tagline,
       description,
-      techStack: techStackParts.length > 0 ? techStackParts.join(', ') : 'Node.js, TypeScript',
-      websiteUrl: websiteUrl || undefined,
-      repoUrl: repoUrl || undefined,
-      targetAudience: 'Developers, Solopreneurs, End Users',
-      status: 'BUILDING',
-      isRegistered: Boolean(existing),
+      path: projectPath,
+      techStack,
+      hasReadme,
     });
   }
 
   return discovered;
 }
 
-export async function autoRegisterDiscoveredProjects(projectsDir: string) {
-  const discovered = await scanLocalProjectsFolder(projectsDir);
-  const newlyRegistered: any[] = [];
+export async function autoRegisterDiscoveredProjects(parentDirPath: string) {
+  const workspace = await getOrCreateDefaultWorkspace();
+  const projects = await scanLocalProjectsDirectory(parentDirPath);
+  const registered = [];
 
-  for (const proj of discovered) {
-    if (proj.isRegistered) continue;
+  for (const proj of projects) {
+    const existing = await db.product.findFirst({
+      where: { name: { equals: proj.name } },
+    });
 
-    console.log(`[Discovery Agent] Auto-registering new discovered project: ${proj.name}...`);
+    if (existing) continue;
 
-    const product = await db.product.create({
+    const created = await db.product.create({
       data: {
+        workspaceId: workspace.id,
         name: proj.name,
         slug: `${proj.slug}-${Date.now().toString().slice(-4)}`,
         tagline: proj.tagline,
         description: proj.description,
-        status: proj.status,
+        status: 'BUILDING',
         techStack: proj.techStack,
-        targetAudience: proj.targetAudience,
-        websiteUrl: proj.websiteUrl || null,
-        repoUrl: proj.repoUrl || null,
+        targetAudience: 'Developers & SaaS Users',
         pricingModel: 'Freemium',
         monthlyRevenue: 0,
         totalUsers: 0,
       },
     });
 
-    // Populate default launch checklists
-    for (const item of DEFAULT_LAUNCH_CHECKLIST) {
-      await db.checklistItem.create({
-        data: {
-          productId: product.id,
-          stage: item.stage,
-          category: item.category,
-          task: item.task,
-        },
-      });
-    }
-
-    // Populate default directory submissions
-    for (const dir of DEFAULT_DIRECTORIES) {
-      await db.directorySubmission.create({
-        data: {
-          productId: product.id,
-          directoryName: dir.directoryName,
-          directoryUrl: dir.directoryUrl,
-          domainRating: dir.domainRating,
-          notes: dir.notes,
-          status: 'NOT_STARTED',
-        },
-      });
-    }
-
-    // Initial metric log
-    await db.metricLog.create({
-      data: {
-        productId: product.id,
-        visitors: 0,
-        signups: 0,
-        mrr: 0,
-        notes: 'Discovered and Registered by Autonomous Agent',
-      },
-    });
-
-    newlyRegistered.push(product);
+    registered.push(created);
   }
 
   return {
-    scannedCount: discovered.length,
-    newlyRegisteredCount: newlyRegistered.length,
-    registeredProjects: newlyRegistered,
-    allDiscovered: discovered,
+    discoveredTotal: projects.length,
+    newlyRegisteredCount: registered.length,
+    projects: registered,
   };
-}
-
-function capitalize(str: string) {
-  return str.replace(/\b\w/g, (l) => l.toUpperCase());
 }

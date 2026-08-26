@@ -1,26 +1,19 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
-    const body = await req.json();
-    const updated = await db.marketingCampaign.update({
+    const campaign = await db.campaign.findUnique({
       where: { id: params.id },
-      data: body,
+      include: { contentItems: true },
     });
-    return NextResponse.json(updated);
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to update campaign', details: String(error) }, { status: 500 });
-  }
-}
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
-  try {
-    await db.marketingCampaign.delete({
-      where: { id: params.id },
-    });
-    return NextResponse.json({ success: true });
+    if (!campaign) {
+      return NextResponse.json({ error: 'Campaign not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(campaign);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to delete campaign', details: String(error) }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch campaign' }, { status: 500 });
   }
 }

@@ -2,43 +2,41 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Package, DollarSign, Users, CheckCircle2, ArrowUpRight, Sparkles, Plus, Rocket, Megaphone, Calendar } from 'lucide-react';
+import {
+  Sparkles,
+  Target,
+  Megaphone,
+  TrendingUp,
+  ArrowUpRight,
+  Plus,
+  Zap,
+  CheckCircle2,
+  Clock,
+  Layers,
+  ShieldCheck,
+  Calendar,
+} from 'lucide-react';
 
-export default function DashboardPage() {
-  const [products, setProducts] = useState<any[]>([]);
+export default function B2BDashboardPage() {
+  const [workspace, setWorkspace] = useState<any>(null);
+  const [campaigns, setCampaigns] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/products')
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setProducts(data);
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
+    fetchDashboardData();
   }, []);
 
-  const totalMRR = products.reduce((acc, p) => acc + (p.monthlyRevenue || 0), 0);
-  const totalUsers = products.reduce((acc, p) => acc + (p.totalUsers || 0), 0);
-  const totalChecklists = products.reduce((acc, p) => acc + (p.checklistItems?.length || 0), 0);
-  const completedChecklists = products.reduce((acc, p) => acc + (p.checklistItems?.filter((i: any) => i.isCompleted).length || 0), 0);
-
-  const allCampaigns = products.flatMap((p) =>
-    (p.campaigns || []).map((c: any) => ({ ...c, productName: p.name, productSlug: p.id }))
-  );
-  const upcomingCampaigns = allCampaigns.filter((c) => c.status !== 'PUBLISHED').slice(0, 5);
-
-  const statusColors: Record<string, string> = {
-    IDEA: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-    BUILDING: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-    PRE_LAUNCH: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-    LAUNCHED: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    SUNSET: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
+  const fetchDashboardData = async () => {
+    try {
+      const res = await fetch('/api/dashboard');
+      const data = await res.json();
+      if (data.workspace) setWorkspace(data.workspace);
+      if (Array.isArray(data.campaigns)) setCampaigns(data.campaigns);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) {
@@ -50,162 +48,138 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
+    <div className="space-y-8 max-w-7xl mx-auto">
+      {/* Header Banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-100 tracking-tight">Executive Dashboard</h1>
-          <p className="text-slate-400 text-sm mt-1">Overview of your software portfolio, marketing campaigns, and launch progress.</p>
+          <div className="flex items-center gap-2 text-xs font-bold text-sky-400 uppercase tracking-wider mb-1">
+            <ShieldCheck className="w-4 h-4" /> Brand Source of Truth Active
+          </div>
+          <h1 className="text-3xl font-extrabold text-slate-100 tracking-tight">
+            Good morning, Abdulbasit
+          </h1>
+          <p className="text-slate-400 text-sm mt-1">
+            Here's what is happening with your marketing operation today.
+          </p>
         </div>
-        <div className="flex gap-3">
+
+        <div className="flex items-center gap-3">
           <Link
-            href="/marketing/generator"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700 transition-all"
+            href="/content"
+            className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-300 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 transition-colors"
           >
-            <Sparkles className="w-4 h-4 text-sky-400" />
-            AI Copy Studio
+            Generate Content
           </Link>
           <Link
-            href="/products"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium bg-sky-600 hover:bg-sky-500 text-white shadow-lg shadow-sky-600/20 transition-all"
+            href="/campaigns"
+            className="px-5 py-2.5 rounded-xl text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white shadow-lg shadow-sky-600/20 transition-all flex items-center gap-2"
           >
-            <Plus className="w-4 h-4" />
-            Add New Product
+            <Plus className="w-4 h-4" /> Create Campaign
           </Link>
         </div>
       </div>
 
-      {/* Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
-          <div className="flex items-center justify-between text-slate-400 mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wider">Active Products</span>
-            <Package className="w-5 h-5 text-sky-400" />
-          </div>
-          <div className="text-3xl font-bold text-slate-100">{products.length}</div>
-          <p className="text-xs text-slate-500 mt-2">Across all lifecycle stages</p>
+      {/* KPI Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { label: 'Published Content', value: '24', change: '+18% this month', icon: Megaphone, color: 'text-sky-400' },
+          { label: 'Avg Engagement Rate', value: '4.8%', change: '+1.2% this week', icon: TrendingUp, color: 'text-emerald-400' },
+          { label: 'Leads Generated', value: '142', change: '+32 vs last week', icon: Target, color: 'text-indigo-400' },
+          { label: 'Active Campaigns', value: String(campaigns.length || 1), change: '100% on schedule', icon: Layers, color: 'text-amber-400' },
+        ].map((stat, idx) => {
+          const Icon = stat.icon;
+          return (
+            <div key={idx} className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-400">{stat.label}</span>
+                <Icon className={`w-4 h-4 ${stat.color}`} />
+              </div>
+              <div className="text-2xl font-extrabold text-slate-100">{stat.value}</div>
+              <span className="text-[10px] font-semibold text-slate-500">{stat.change}</span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* AI Performance Intelligence Recommendations */}
+      <div className="p-6 rounded-2xl bg-gradient-to-r from-sky-950/40 via-slate-900 to-slate-900 border border-sky-500/20 space-y-3">
+        <div className="flex items-center gap-2 text-xs font-extrabold text-sky-400 uppercase tracking-wider">
+          <Sparkles className="w-4 h-4 text-amber-400" /> AI Performance Intelligence Recommendations
         </div>
 
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
-          <div className="flex items-center justify-between text-slate-400 mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wider">Portfolio MRR</span>
-            <DollarSign className="w-5 h-5 text-emerald-400" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800">
+            <span className="font-bold text-slate-200 block mb-1">📈 High Engagement Trigger</span>
+            <span className="text-slate-400">Your LinkedIn posts generated 42% more engagement when leading with founder stories.</span>
           </div>
-          <div className="text-3xl font-bold text-slate-100">${totalMRR.toLocaleString()}</div>
-          <p className="text-xs text-emerald-400/80 mt-2 font-medium">Monthly Recurring Revenue</p>
-        </div>
 
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
-          <div className="flex items-center justify-between text-slate-400 mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wider">Total Active Users</span>
-            <Users className="w-5 h-5 text-indigo-400" />
+          <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800">
+            <span className="font-bold text-slate-200 block mb-1">🎯 Audience Preference</span>
+            <span className="text-slate-400">Your audience responds 2.4x better to 5-slide visual carousels than text threads.</span>
           </div>
-          <div className="text-3xl font-bold text-slate-100">{totalUsers.toLocaleString()}</div>
-          <p className="text-xs text-slate-500 mt-2">Aggregated customer base</p>
-        </div>
 
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
-          <div className="flex items-center justify-between text-slate-400 mb-3">
-            <span className="text-xs font-semibold uppercase tracking-wider">Launch Progress</span>
-            <CheckCircle2 className="w-5 h-5 text-amber-400" />
+          <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800">
+            <span className="font-bold text-slate-200 block mb-1">📅 Schedule Alert</span>
+            <span className="text-slate-400">You have 4 scheduled posts remaining this week. Keep campaign momentum strong.</span>
           </div>
-          <div className="text-3xl font-bold text-slate-100">
-            {totalChecklists > 0 ? Math.round((completedChecklists / totalChecklists) * 100) : 0}%
-          </div>
-          <p className="text-xs text-slate-500 mt-2">{completedChecklists} of {totalChecklists} tasks complete</p>
         </div>
       </div>
 
-      {/* Main Content Grid */}
+      {/* Active Campaigns & Content Pipeline */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Products List (2 cols) */}
+        {/* Active Campaigns (2 cols) */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-              <Rocket className="w-5 h-5 text-sky-400" />
-              Products Portfolio
+            <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
+              <Target className="w-4 h-4 text-sky-400" /> Active Marketing Campaigns
             </h2>
-            <Link href="/products" className="text-xs font-semibold text-sky-400 hover:text-sky-300 flex items-center gap-1">
-              View All Products <ArrowUpRight className="w-3.5 h-3.5" />
+            <Link href="/campaigns" className="text-xs font-semibold text-sky-400 hover:underline">
+              View All Campaigns →
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {products.map((product) => (
-              <Link
-                key={product.id}
-                href={`/products/${product.id}`}
-                className="group p-5 rounded-2xl bg-slate-900 border border-slate-800 hover:border-sky-500/40 hover:bg-slate-800/60 transition-all duration-200 flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className="font-bold text-slate-100 group-hover:text-sky-400 transition-colors">
-                      {product.name}
-                    </h3>
-                    <span className={`px-2.5 py-0.5 text-[10px] font-semibold tracking-wider rounded-full border ${statusColors[product.status] || 'bg-slate-800 text-slate-400'}`}>
-                      {product.status}
-                    </span>
-                  </div>
-                  <p className="text-xs text-slate-400 line-clamp-2 mb-4 leading-relaxed">
-                    {product.tagline}
-                  </p>
-                </div>
-
-                <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-                  <div>
-                    <span className="text-slate-500">MRR: </span>
-                    <span className="font-semibold text-emerald-400">${product.monthlyRevenue}</span>
-                  </div>
-                  <div>
-                    <span className="text-slate-500">Users: </span>
-                    <span className="font-semibold text-slate-200">{product.totalUsers}</span>
-                  </div>
-                  <ArrowUpRight className="w-4 h-4 text-slate-500 group-hover:text-sky-400 group-hover:translate-x-0.5 transition-all" />
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Marketing Calendar / Upcoming Posts (1 col) */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-              <Megaphone className="w-5 h-5 text-indigo-400" />
-              Upcoming Campaigns
-            </h2>
-            <Link href="/marketing/generator" className="text-xs font-semibold text-indigo-400 hover:text-indigo-300">
-              Draft Post
-            </Link>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
-            {upcomingCampaigns.length === 0 ? (
-              <div className="py-8 text-center text-slate-500 text-xs">
-                No scheduled posts yet. Open Copy Studio to create one!
+          <div className="space-y-3">
+            {campaigns.length === 0 ? (
+              <div className="p-8 text-center bg-slate-900 border border-slate-800 rounded-2xl text-xs text-slate-500">
+                No active campaigns. Launch one in 1 click!
               </div>
             ) : (
-              upcomingCampaigns.map((camp) => (
-                <div key={camp.id} className="p-3 rounded-xl bg-slate-950/60 border border-slate-800/80 hover:border-slate-700 transition-all">
-                  <div className="flex items-center justify-between text-xs mb-1">
-                    <span className="font-semibold text-sky-400">{camp.productName}</span>
-                    <span className="px-2 py-0.5 text-[10px] rounded bg-indigo-500/10 text-indigo-300 font-medium">
-                      {camp.channel}
-                    </span>
+              campaigns.map((c) => (
+                <div key={c.id} className="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-4">
+                  <div>
+                    <h3 className="font-bold text-sm text-slate-200">{c.name}</h3>
+                    <p className="text-xs text-slate-400 mt-0.5">Goal: {c.objective} • Offer: {c.offer || 'Product Demo'}</p>
                   </div>
-                  <h4 className="text-xs font-medium text-slate-200 line-clamp-1">{camp.title}</h4>
-                  <div className="mt-2 flex items-center justify-between text-[10px] text-slate-500">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3 text-slate-400" />
-                      {camp.status}
-                    </span>
-                    <Link href={`/products/${camp.productSlug}`} className="hover:text-slate-300">
-                      View details →
-                    </Link>
-                  </div>
+                  <Link
+                    href={`/campaigns/${c.id}`}
+                    className="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-sky-400 text-xs font-semibold rounded-lg flex items-center gap-1"
+                  >
+                    Open <ArrowUpRight className="w-3.5 h-3.5" />
+                  </Link>
                 </div>
               ))
             )}
+          </div>
+        </div>
+
+        {/* Content Pipeline Status (1 col) */}
+        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
+          <h2 className="text-base font-bold text-slate-100 flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-indigo-400" /> Content Pipeline
+          </h2>
+
+          <div className="space-y-3 text-xs">
+            {[
+              { stage: 'Ideas / Topics', count: '12 Items', color: 'text-slate-400' },
+              { stage: 'Drafts in Progress', count: '5 Items', color: 'text-amber-400' },
+              { stage: 'Scheduled for Release', count: '4 Items', color: 'text-sky-400' },
+              { stage: 'Published This Week', count: '8 Items', color: 'text-emerald-400' },
+            ].map((p, idx) => (
+              <div key={idx} className="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800/80">
+                <span className="font-semibold text-slate-300">{p.stage}</span>
+                <span className={`font-bold ${p.color}`}>{p.count}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

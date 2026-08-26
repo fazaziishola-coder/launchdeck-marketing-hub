@@ -7,13 +7,160 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model User {
+  id               String            @id @default(uuid())
+  email            String            @unique
+  name             String?
+  passwordHash     String?
+  avatarUrl        String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  workspaceMembers WorkspaceMember[]
+  ownedWorkspaces  Workspace[]       @relation("WorkspaceOwner")
+}
+
+model Workspace {
+  id                  String                @id @default(uuid())
+  name                String
+  slug                String                @unique
+  ownerId             String
+  owner               User                  @relation("WorkspaceOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  plan                String                @default("STARTER") // FREE, STARTER, GROWTH, AGENCY, ENTERPRISE
+  aiCreditsRemaining  Int                   @default(2500)
+  monthlyCreditLimit  Int                   @default(2500)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  members             WorkspaceMember[]
+  brand               Brand?
+  campaigns           Campaign[]
+  contentItems        Content[]
+  schedules           ContentSchedule[]
+  aiUsages            AIUsage[]
+  subscriptions       Subscription[]
+  products            Product[]
+}
+
+model WorkspaceMember {
+  id          String    @id @default(uuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role        String    @default("ADMIN") // OWNER, ADMIN, EDITOR, CONTRIBUTOR, VIEWER
+  createdAt   DateTime  @default(now())
+
+  @@unique([workspaceId, userId])
+}
+
+model Brand {
+  id               String    @id @default(uuid())
+  workspaceId      String    @unique
+  workspace        Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  companyName      String
+  websiteUrl       String?
+  industry         String?
+  businessCategory String?   // STARTUP, SAAS, AGENCY, PERSONAL_BRAND, ECOMMERCE, SERVICE
+  description      String?
+  targetAudience   String?   // ICP definition
+  tagline          String?
+  mission          String?
+  valueProps       String?   // JSON or text
+  messagingPillars String?   // JSON or text
+  contentPillars   String?   // JSON or text
+  toneOfVoice      String?   @default("Professional & Authoritative")
+  wordsToUse       String?
+  wordsToAvoid     String?
+  primaryGoal      String?   @default("GENERATE_LEADS")
+  logoUrl          String?
+  brandColors      String?   @default("#0284c7, #0f172a")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model Campaign {
+  id             String            @id @default(uuid())
+  workspaceId    String
+  workspace      Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  name           String
+  objective      String            // GENERATE_AWARENESS, GENERATE_LEADS, PRODUCT_LAUNCH, GENERATE_SALES
+  status         String            @default("ACTIVE") // PLANNING, ACTIVE, COMPLETED, PAUSED
+  targetAudience String?
+  offer          String?
+  channels       String?           // LINKEDIN, TWITTER, INSTAGRAM, EMAIL
+  startDate      DateTime?
+  endDate        DateTime?
+  targetMetrics  String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  contentItems   Content[]
+}
+
+model Content {
+  id           String            @id @default(uuid())
+  workspaceId  String
+  workspace    Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  campaignId   String?
+  campaign     Campaign?         @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  title        String
+  contentType  String            // LINKEDIN_POST, TWITTER_THREAD, CAROUSEL, EMAIL, BLOG, COLD_OUTREACH
+  status       String            @default("DRAFT") // IDEA, DRAFT, REVIEW, APPROVED, SCHEDULED, PUBLISHED
+  body         String
+  variations   String?           // JSON array of variations
+  slidesData   String?           // JSON array of slides if carousel
+  targetChannel String?
+  scheduledFor DateTime?
+  publishedAt  DateTime?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  schedules    ContentSchedule[]
+}
+
+model ContentSchedule {
+  id           String    @id @default(uuid())
+  workspaceId  String
+  workspace    Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  contentId    String
+  content      Content   @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  platform     String    // LINKEDIN, TWITTER, INSTAGRAM, FACEBOOK, EMAIL
+  scheduledFor DateTime
+  status       String    @default("SCHEDULED") // SCHEDULED, PUBLISHED, FAILED
+  publishedAt  DateTime?
+  createdAt    DateTime  @default(now())
+}
+
+model AIUsage {
+  id               String    @id @default(uuid())
+  workspaceId      String
+  workspace        Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  promptType       String    // CAMPAIGN_GEN, CONTENT_GEN, CAROUSEL_GEN, COPILOT, BRAND_ANALYSIS
+  creditsConsumed  Int       @default(10)
+  providerUsed     String    @default("Gemini 1.5 Flash")
+  createdAt        DateTime  @default(now())
+}
+
+model Subscription {
+  id                   String    @id @default(uuid())
+  workspaceId          String
+  workspace            Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  plan                 String    @default("STARTER")
+  status               String    @default("ACTIVE")
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  currentPeriodEnd     DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+}
+
+// Backward compatibility Product model
 model Product {
   id                  String                @id @default(uuid())
+  workspaceId         String?
+  workspace           Workspace?            @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   name                String
   slug                String                @unique
   tagline             String
   description         String
-  status              String                @default("BUILDING") // IDEA, BUILDING, PRE_LAUNCH, LAUNCHED, SUNSET
+  status              String                @default("BUILDING")
   websiteUrl          String?
   repoUrl             String?
   techStack           String?
@@ -23,62 +170,4 @@ model Product {
   totalUsers          Int                   @default(0)
   createdAt           DateTime              @default(now())
   updatedAt           DateTime              @updatedAt
-  campaigns           MarketingCampaign[]
-  checklistItems      ChecklistItem[]
-  directorySubmissions DirectorySubmission[]
-  metricLogs          MetricLog[]
-}
-
-model MarketingCampaign {
-  id            String    @id @default(uuid())
-  productId     String
-  product       Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  title         String
-  channel       String    // TWITTER, REDDIT, PRODUCT_HUNT, LINKEDIN, NEWSLETTER, COLD_EMAIL
-  scheduledDate DateTime?
-  status        String    @default("DRAFT") // DRAFT, SCHEDULED, PUBLISHED
-  content       String
-  notes         String?
-  impressions   Int       @default(0)
-  clicks        Int       @default(0)
-  conversions   Int       @default(0)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-}
-
-model ChecklistItem {
-  id          String    @id @default(uuid())
-  productId   String
-  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  stage       String    @default("PRE_LAUNCH") // PRE_LAUNCH, LAUNCH_DAY, POST_LAUNCH
-  task        String
-  category    String    @default("General")
-  isCompleted Boolean   @default(false)
-  dueDate     DateTime?
-  createdAt   DateTime  @default(now())
-}
-
-model DirectorySubmission {
-  id            String    @id @default(uuid())
-  productId     String
-  product       Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
-  directoryName String
-  directoryUrl  String
-  status        String    @default("NOT_STARTED") // NOT_STARTED, SUBMITTED, APPROVED, REJECTED
-  submissionUrl String?
-  domainRating  Int?
-  notes         String?
-  submittedAt   DateTime?
-  createdAt     DateTime  @default(now())
-}
-
-model MetricLog {
-  id        String   @id @default(uuid())
-  productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  date      DateTime @default(now())
-  visitors  Int      @default(0)
-  signups   Int      @default(0)
-  mrr       Float    @default(0)
-  notes     String?
 }
