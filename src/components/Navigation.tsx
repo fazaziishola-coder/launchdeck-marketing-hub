@@ -1,7 +1,8 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   ShieldCheck,
@@ -16,10 +17,31 @@ import {
   CreditCard,
   Settings,
   Rocket,
+  LogOut,
+  User,
 } from 'lucide-react';
 
 export default function Navigation() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated && data.user) {
+          setCurrentUser(data.user);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    setCurrentUser(null);
+    router.push('/login');
+  };
 
   const workspaceLinks = [
     { name: 'Dashboard', href: '/', icon: LayoutDashboard },
@@ -121,14 +143,43 @@ export default function Navigation() {
         </div>
       </div>
 
-      {/* Onboarding Trigger Footer */}
-      <div className="pt-4 border-t border-slate-800/80">
-        <Link
-          href="/onboarding"
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 text-xs font-bold text-slate-300 bg-slate-800/60 hover:bg-slate-800 rounded-xl border border-slate-700/50 transition-colors"
-        >
-          <Rocket className="w-3.5 h-3.5 text-sky-400" /> Run Onboarding Wizard
-        </Link>
+      {/* User Profile & Auth Footer */}
+      <div className="pt-4 border-t border-slate-800/80 space-y-2">
+        {currentUser ? (
+          <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800/80 flex items-center justify-between">
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="w-7 h-7 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 font-bold shrink-0">
+                <User className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-xs font-bold text-slate-200 truncate">{currentUser.name || 'User'}</div>
+                <div className="text-[10px] text-slate-400 truncate">{currentUser.email}</div>
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              title="Log Out"
+              className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <Link
+              href="/login"
+              className="flex-1 text-center py-2 text-xs font-bold text-slate-300 bg-slate-800/60 hover:bg-slate-800 rounded-xl border border-slate-700/50 transition-colors"
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/signup"
+              className="flex-1 text-center py-2 text-xs font-bold text-white bg-sky-600 hover:bg-sky-500 rounded-xl shadow-md shadow-sky-600/20 transition-colors"
+            >
+              Sign Up
+            </Link>
+          </div>
+        )}
       </div>
     </aside>
   );
