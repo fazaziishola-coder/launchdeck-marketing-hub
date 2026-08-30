@@ -18,6 +18,7 @@ import {
   Cpu,
   Terminal,
 } from 'lucide-react';
+import { CardBody, CardContainer, CardItem } from '@/components/ui/3d-card-effect';
 
 export default function AwwwardsEntranceLandingPage() {
   const [activeTab, setActiveTab] = useState<'brand' | 'campaigns' | 'content' | 'analytics'>('brand');
@@ -50,7 +51,7 @@ export default function AwwwardsEntranceLandingPage() {
         {/* Center Nav Links */}
         <nav className="hidden md:flex items-center gap-8 text-xs font-bold text-slate-400">
           <a href="#showcase" className="hover:text-slate-100 transition-colors">Showcase</a>
-          <a href="#architecture" className="hover:text-slate-100 transition-colors">Architecture</a>
+          <a href="#interactive-card" className="hover:text-slate-100 transition-colors">3D Interactive</a>
           <a href="#comparison" className="hover:text-slate-100 transition-colors">Stack Comparison</a>
           <a href="#pricing" className="hover:text-slate-100 transition-colors">Pricing</a>
         </nav>
@@ -130,6 +131,64 @@ export default function AwwwardsEntranceLandingPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* 3D Interactive Card Showcase */}
+      <section id="interactive-card" className="max-w-6xl mx-auto px-6 py-12 border-t border-slate-800/60">
+        <div className="text-center space-y-2">
+          <span className="text-xs font-black text-sky-400 uppercase tracking-widest block">INTERACTIVE 3D COMPONENT</span>
+          <h2 className="text-2xl sm:text-4xl font-black text-slate-100 tracking-tight uppercase">
+            3D Tilt Experience
+          </h2>
+          <p className="text-xs text-slate-400 max-w-md mx-auto">
+            Hover over the card to unleash CSS perspective, depth, and floating layers.
+          </p>
+        </div>
+
+        <CardContainer className="inter-var">
+          <CardBody className="bg-slate-900/90 relative group/card dark:hover:shadow-2xl dark:hover:shadow-sky-500/[0.15] dark:bg-slate-900 dark:border-slate-800 border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-2xl p-6 border shadow-2xl">
+            <CardItem
+              translateZ="50"
+              className="text-xl font-black text-slate-100 dark:text-white uppercase tracking-tight"
+            >
+              Marketing OS Engine
+            </CardItem>
+            <CardItem
+              as="p"
+              translateZ="60"
+              className="text-slate-400 text-xs max-w-sm mt-2 leading-relaxed"
+            >
+              Unified Brand Source of Truth, 14-day campaign blitzes, and multi-channel content generation in 3D perspective.
+            </CardItem>
+            <CardItem translateZ="100" className="w-full mt-4">
+              <img
+                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop&ixlib=rb-4.0.3"
+                height="1000"
+                width="1000"
+                className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-2xl shadow-sky-500/20"
+                alt="LaunchDeck Workspace Analytics"
+              />
+            </CardItem>
+            <div className="flex justify-between items-center mt-10">
+              <CardItem
+                translateZ={20}
+                as={Link}
+                href="/signup"
+                className="px-4 py-2 rounded-xl text-xs font-bold text-sky-400 hover:underline"
+              >
+                Explore OS →
+              </CardItem>
+              <CardItem
+                translateZ={20}
+                as={Link}
+                href="/signup"
+                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-sky-500/20"
+              >
+                Start Free
+              </CardItem>
+            </div>
+          </CardBody>
+        </CardContainer>
       </section>
 
       {/* Interactive Awwwards Feature Showcase */}
