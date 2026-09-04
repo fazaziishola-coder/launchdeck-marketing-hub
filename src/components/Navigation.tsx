@@ -87,7 +87,7 @@ export default function Navigation() {
 
         {/* Primary Workspace Links */}
         <div className="space-y-1">
-          <span className="px-2 text-[10px] font-mono uppercase tracking-wider text-slate-400 block mb-1.5">
+          <span className="px-2 text-[11px] font-medium text-slate-400 block mb-1">
             Workspace
           </span>
           <nav className="space-y-0.5">
@@ -100,7 +100,7 @@ export default function Navigation() {
                   href={link.href}
                   className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[13px] transition-colors btn-tactile ${
                     isActive
-                      ? 'bg-sky-500/10 text-sky-400 font-semibold border-l-2 border-sky-400 pl-2'
+                      ? 'bg-sky-500/10 text-sky-300 font-medium'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
                   }`}
                 >
@@ -110,9 +110,9 @@ export default function Navigation() {
                   </div>
                   {link.badge && (
                     <span
-                      className={`font-mono text-[9px] px-1.5 py-0.5 rounded border uppercase shrink-0 ${
+                      className={`text-[10px] px-1.5 py-0.5 rounded border uppercase shrink-0 ${
                         link.badge === 'TRUTH'
-                          ? 'bg-sky-500/10 text-sky-400 border-sky-500/20'
+                          ? 'bg-sky-500/10 text-sky-300 border-sky-500/20 font-medium'
                           : 'bg-white/[0.04] text-slate-400 border-white/[0.08]'
                       }`}
                     >
@@ -127,7 +127,7 @@ export default function Navigation() {
 
         {/* Management Links */}
         <div className="space-y-1 pt-2">
-          <span className="px-2 text-[10px] font-mono uppercase tracking-wider text-slate-400 block mb-1.5">
+          <span className="px-2 text-[11px] font-medium text-slate-400 block mb-1">
             Management
           </span>
           <nav className="space-y-0.5">
@@ -140,7 +140,7 @@ export default function Navigation() {
                   href={link.href}
                   className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[13px] transition-colors btn-tactile ${
                     isActive
-                      ? 'bg-sky-500/10 text-sky-400 font-semibold border-l-2 border-sky-400 pl-2'
+                      ? 'bg-sky-500/10 text-sky-300 font-medium'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]'
                   }`}
                 >
@@ -165,7 +165,7 @@ export default function Navigation() {
               </div>
               <div className="min-w-0">
                 <div className="text-xs font-semibold text-slate-200 truncate">{currentUser.name || 'User'}</div>
-                <div className="text-[10px] font-mono text-slate-400 truncate">{currentUser.email}</div>
+                <div className="text-[10px] text-slate-400 truncate">{currentUser.email}</div>
               </div>
             </div>
             <button
@@ -186,7 +186,7 @@ export default function Navigation() {
             </Link>
             <Link
               href="/signup"
-              className="flex-1 text-center py-1.5 text-xs font-semibold text-slate-950 bg-sky-400 hover:bg-sky-300 rounded-lg transition-colors btn-tactile shadow-sm"
+              className="flex-1 text-center py-1.5 text-xs font-semibold text-sky-950 bg-sky-400 hover:bg-sky-300 rounded-lg transition-colors btn-tactile shadow-sm"
             >
               Sign Up
             </Link>

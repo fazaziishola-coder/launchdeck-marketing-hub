@@ -81,7 +81,7 @@ export default function CampaignsPage() {
 
         <button
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-sky-400 hover:bg-sky-300 text-slate-950 transition-colors btn-tactile shadow-sm"
+          className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-sky-400 hover:bg-sky-300 text-sky-950 transition-colors btn-tactile shadow-sm"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>New Campaign</span>
@@ -107,7 +107,7 @@ export default function CampaignsPage() {
           <div className="pt-2">
             <button
               onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-sky-400 hover:bg-sky-300 text-slate-950 text-xs font-semibold rounded-lg btn-tactile transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-sky-400 hover:bg-sky-300 text-sky-950 text-xs font-semibold rounded-lg btn-tactile transition-colors"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Create Campaign</span>
@@ -262,7 +262,7 @@ export default function CampaignsPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-4 py-1.5 bg-sky-400 hover:bg-sky-300 text-slate-950 font-semibold text-xs rounded-lg transition-colors btn-tactile disabled:opacity-50"
+                  className="px-4 py-1.5 bg-sky-400 hover:bg-sky-300 text-sky-950 font-semibold text-xs rounded-lg transition-colors btn-tactile disabled:opacity-50"
                 >
                   {submitting ? 'Launching...' : 'Create Campaign'}
                 </button>

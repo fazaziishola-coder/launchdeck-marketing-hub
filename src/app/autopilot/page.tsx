@@ -133,7 +133,7 @@ export default function AutopilotPage() {
         <button
           onClick={handleRunFullAutopilot}
           disabled={runningAutopilot}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold bg-sky-400 hover:bg-sky-300 text-slate-950 shadow-sm transition-colors btn-tactile disabled:opacity-50"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold bg-sky-400 hover:bg-sky-300 text-sky-950 shadow-sm transition-colors btn-tactile disabled:opacity-50"
         >
           {runningAutopilot ? (
             <>
@@ -142,7 +142,7 @@ export default function AutopilotPage() {
             </>
           ) : (
             <>
-              <Play className="w-3.5 h-3.5 fill-slate-950" />
+              <Play className="w-3.5 h-3.5 fill-sky-950" />
               <span>Run Autopilot Loop</span>
             </>
           )}
@@ -293,7 +293,7 @@ export default function AutopilotPage() {
             <button
               onClick={handleGenerateSlides}
               disabled={generatingSlides || !selectedProductId}
-              className="w-full py-2.5 bg-sky-400 hover:bg-sky-300 disabled:opacity-50 text-slate-950 font-semibold text-xs rounded-lg shadow-sm flex items-center justify-center gap-2 mb-4 btn-tactile transition-colors"
+              className="w-full py-2.5 bg-sky-400 hover:bg-sky-300 disabled:opacity-50 text-sky-950 font-semibold text-xs rounded-lg shadow-sm flex items-center justify-center gap-2 mb-4 btn-tactile transition-colors"
             >
               {generatingSlides ? (
                 <>

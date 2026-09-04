@@ -18,7 +18,7 @@ export default function LandingPage() {
   const [activeEngine, setActiveEngine] = useState<'brand' | 'campaign' | 'carousel'>('brand');
 
   return (
-    <div className="min-h-screen bg-[#080a11] text-slate-100 selection:bg-sky-400 selection:text-slate-950">
+    <div className="min-h-screen bg-[#080a11] text-slate-100">
       {/* Top Navigation */}
       <header className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between border-b border-white/[0.08] sticky top-0 bg-[#080a11]/90 backdrop-blur-md z-40">
         <div className="flex items-center gap-3">
@@ -27,8 +27,8 @@ export default function LandingPage() {
           </div>
           <div className="flex items-center gap-2">
             <span className="font-bold text-base tracking-tight text-slate-100">LaunchDeck</span>
-            <span className="font-mono text-[9px] uppercase px-1.5 py-0.5 rounded bg-white/[0.05] border border-white/[0.08] text-slate-400">
-              OS v2
+            <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-white/[0.05] border border-white/[0.08] text-slate-400">
+              v2.0
             </span>
           </div>
         </div>
@@ -48,7 +48,7 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/signup"
-            className="px-4 py-2 bg-sky-400 hover:bg-sky-300 text-slate-950 font-semibold text-xs rounded-lg transition-colors btn-tactile shadow-sm flex items-center gap-1.5"
+            className="px-4 py-2 bg-sky-400 hover:bg-sky-300 text-sky-950 font-semibold text-xs rounded-lg transition-colors btn-tactile shadow-sm flex items-center gap-1.5"
           >
             <span>Start Free Trial</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -56,19 +56,11 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* Hero Section: Asymmetric Split Layout (DESIGN_VARIANCE: 7) */}
-      <section className="max-w-7xl mx-auto px-6 pt-16 md:pt-24 pb-20 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center min-h-[calc(100dvh-4.5rem)]">
+      {/* Hero Section: Asymmetric Split Layout */}
+      <section className="max-w-7xl mx-auto px-6 pt-20 md:pt-28 pb-20 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center min-h-[calc(100dvh-4.5rem)]">
         {/* Left Column: Copy & Actions */}
         <div className="lg:col-span-6 space-y-6">
-          {/* Eyebrow (1 of max 1 per 3 sections) */}
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/[0.08]">
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
-            <span className="font-mono text-[11px] uppercase tracking-wider text-slate-300">
-              Autonomous Marketing Operating System
-            </span>
-          </div>
-
-          {/* Headline (strictly max 2 lines desktop, leading-tight) */}
+          {/* Headline (strictly max 2 lines desktop, leading-tight, no kicker) */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-100 tracking-tight leading-[1.08]">
             Run recurring marketing.<br />
             <span className="text-sky-400">From one system.</span>
@@ -83,7 +75,7 @@ export default function LandingPage() {
           <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <Link
               href="/signup"
-              className="px-6 py-3 bg-sky-400 hover:bg-sky-300 text-slate-950 font-semibold text-sm rounded-lg transition-colors btn-tactile flex items-center justify-center gap-2 shadow-sm"
+              className="px-6 py-3 bg-sky-400 hover:bg-sky-300 text-sky-950 font-semibold text-sm rounded-lg transition-colors btn-tactile flex items-center justify-center gap-2 shadow-sm"
             >
               Start Free Trial
               <ArrowRight className="w-4 h-4" />
@@ -96,7 +88,7 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          <div className="pt-4 flex items-center gap-6 text-xs text-slate-400 font-mono">
+          <div className="pt-4 flex items-center gap-6 text-xs text-slate-400">
             <span className="flex items-center gap-1.5">
               <Check className="w-3.5 h-3.5 text-emerald-400" /> No credit card required
             </span>
@@ -115,20 +107,20 @@ export default function LandingPage() {
                 <div className="w-2.5 h-2.5 rounded-full bg-white/[0.12]" />
                 <div className="w-2.5 h-2.5 rounded-full bg-white/[0.12]" />
                 <div className="w-2.5 h-2.5 rounded-full bg-white/[0.12]" />
-                <span className="font-mono text-[11px] text-slate-400 ml-2">launchdeck-os.internal</span>
+                <span className="text-[11px] text-slate-400 ml-2">launchdeck-os.internal</span>
               </div>
-              <div className="font-mono text-[10px] text-emerald-400 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span>ACTIVE PIPELINE</span>
+              <div className="text-[11px] text-emerald-400 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                <span>Active Pipeline</span>
               </div>
             </div>
 
             {/* Interactive Engine Tabs */}
             <div className="p-2 border-b border-white/[0.06] bg-[#0c0f18] grid grid-cols-3 gap-1">
               {[
-                { id: 'brand', label: '01 Brand Truth', icon: ShieldCheck },
-                { id: 'campaign', label: '02 14-Day Blitz', icon: Target },
-                { id: 'carousel', label: '03 Visual Studio', icon: Sparkles },
+                { id: 'brand', label: 'Brand Vault', icon: ShieldCheck },
+                { id: 'campaign', label: '14-Day Sprints', icon: Target },
+                { id: 'carousel', label: 'Carousel Studio', icon: Sparkles },
               ].map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeEngine === tab.id;
@@ -425,7 +417,7 @@ export default function LandingPage() {
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/signup"
-              className="px-6 py-3 bg-sky-400 hover:bg-sky-300 text-slate-950 font-semibold text-sm rounded-lg transition-colors btn-tactile shadow-sm flex items-center gap-2"
+              className="px-6 py-3 bg-sky-400 hover:bg-sky-300 text-sky-950 font-semibold text-sm rounded-lg transition-colors btn-tactile shadow-sm flex items-center gap-2"
             >
               Start Free Trial
               <ArrowRight className="w-4 h-4" />

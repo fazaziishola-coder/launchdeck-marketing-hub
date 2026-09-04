@@ -214,7 +214,7 @@ function GeneratorContent() {
           <button
             onClick={handleGenerate}
             disabled={generating}
-            className="w-full py-2.5 bg-sky-400 hover:bg-sky-300 text-slate-950 font-semibold text-xs rounded-lg shadow-sm flex items-center justify-center gap-2 transition-colors btn-tactile disabled:opacity-50"
+            className="w-full py-2.5 bg-sky-400 hover:bg-sky-300 text-sky-950 font-semibold text-xs rounded-lg shadow-sm flex items-center justify-center gap-2 transition-colors btn-tactile disabled:opacity-50"
           >
             {generating ? (
               <>

@@ -133,7 +133,7 @@ function ContentStudioInner() {
           <button
             onClick={handleGenerateContent}
             disabled={generating}
-            className="w-full py-2.5 bg-sky-400 hover:bg-sky-300 text-slate-950 font-semibold text-xs rounded-lg transition-colors btn-tactile shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full py-2.5 bg-sky-400 hover:bg-sky-300 text-sky-950 font-semibold text-xs rounded-lg transition-colors btn-tactile shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {generating ? (
               <>

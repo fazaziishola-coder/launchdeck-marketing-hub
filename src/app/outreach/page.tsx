@@ -78,7 +78,7 @@ export default function OutreachPage() {
           <button
             onClick={handleGenerateOutreach}
             disabled={generating}
-            className="w-full py-2.5 bg-sky-400 hover:bg-sky-300 disabled:opacity-50 text-slate-950 font-semibold text-xs rounded-lg shadow-sm flex items-center justify-center gap-2 btn-tactile transition-colors"
+            className="w-full py-2.5 bg-sky-400 hover:bg-sky-300 disabled:opacity-50 text-sky-950 font-semibold text-xs rounded-lg shadow-sm flex items-center justify-center gap-2 btn-tactile transition-colors"
           >
             {generating ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             <span>{generating ? 'Drafting Sequence...' : 'Generate Outreach Sequence'}</span>

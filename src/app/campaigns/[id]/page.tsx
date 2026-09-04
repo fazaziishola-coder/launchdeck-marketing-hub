@@ -37,7 +37,7 @@ export default function CampaignDetailWorkspace() {
   if (loading || !campaign) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-sky-500"></div>
+        <div className="animate-spin rounded-full h-10 w-10 border-2 border-sky-400 border-t-transparent"></div>
       </div>
     );
   }
@@ -63,7 +63,7 @@ export default function CampaignDetailWorkspace() {
 
           <Link
             href={`/content?campaignId=${campaign.id}`}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-sky-400 hover:bg-sky-300 text-slate-950 font-semibold text-xs rounded-lg shadow-sm btn-tactile transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-sky-400 hover:bg-sky-300 text-sky-950 font-semibold text-xs rounded-lg shadow-sm btn-tactile transition-colors"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>Generate Content</span>

@@ -46,7 +46,7 @@ export async function POST(req: Request) {
           headline: 'Built for speed and conversion',
           subheadline: 'Everything early-stage teams need to scale revenue.',
           points: ['1️⃣ 14-day launch campaigns', '2️⃣ 5-slide visual carousel generator', '3️⃣ Multi-LLM quota failover router'],
-          themeColor: 'from-purple-600 to-indigo-600',
+          themeColor: 'from-blue-600 to-cyan-600',
         },
         {
           slideNumber: 5,

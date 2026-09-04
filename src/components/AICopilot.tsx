@@ -116,7 +116,7 @@ export default function AICopilot() {
                   <div
                     className={`p-3 rounded-xl max-w-[85%] leading-relaxed ${
                       m.sender === 'user'
-                        ? 'bg-sky-500 text-slate-950 font-medium'
+                        ? 'bg-sky-500 text-sky-950 font-medium'
                         : 'bg-[#101422] border border-white/[0.07] text-slate-200'
                     }`}
                   >
@@ -169,7 +169,7 @@ export default function AICopilot() {
                 <button
                   type="submit"
                   disabled={!input.trim() || loading}
-                  className="absolute right-1.5 top-1.5 p-1.5 bg-sky-400 hover:bg-sky-300 disabled:opacity-30 text-slate-950 rounded-md transition-colors btn-tactile"
+                  className="absolute right-1.5 top-1.5 p-1.5 bg-sky-400 hover:bg-sky-300 disabled:opacity-30 text-sky-950 rounded-md transition-colors btn-tactile"
                 >
                   <Send className="w-3 h-3" />
                 </button>

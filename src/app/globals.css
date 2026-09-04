@@ -18,6 +18,12 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  caret-color: #38bdf8;
+}
+
+::selection {
+  background-color: rgba(56, 189, 248, 0.25);
+  color: #ffffff;
 }
 
 /* Tactile interaction utility */

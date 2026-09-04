@@ -76,7 +76,7 @@ export default function DashboardPage() {
           </Link>
           <Link
             href="/campaigns"
-            className="px-4 py-2 rounded-lg text-xs font-semibold bg-sky-400 hover:bg-sky-300 text-slate-950 transition-colors btn-tactile shadow-sm flex items-center gap-1.5"
+            className="px-4 py-2 rounded-lg text-xs font-semibold bg-sky-400 hover:bg-sky-300 text-sky-950 transition-colors btn-tactile shadow-sm flex items-center gap-1.5"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Create Campaign</span>

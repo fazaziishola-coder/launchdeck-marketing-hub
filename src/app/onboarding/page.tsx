@@ -129,7 +129,7 @@ export default function OnboardingWizard() {
       <div className="max-w-3xl mx-auto w-full pt-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-sky-500 flex items-center justify-center text-slate-950 font-extrabold">
+            <div className="w-8 h-8 rounded-lg bg-sky-500 flex items-center justify-center text-sky-950 font-extrabold">
               <Rocket className="w-5 h-5" />
             </div>
             <span className="font-bold text-base text-slate-200">LaunchDeck OS Setup</span>
@@ -169,7 +169,7 @@ export default function OnboardingWizard() {
                   onClick={() => setCategory(item.id)}
                   className={`p-4 rounded-xl border text-left transition-all ${
                     category === item.id
-                      ? 'bg-sky-600/10 border-sky-500 text-slate-100 shadow-lg shadow-sky-500/10'
+                      ? 'bg-sky-600/10 border-sky-500 text-white shadow-lg shadow-sky-500/10'
                       : 'bg-slate-950 border-slate-800/80 text-slate-400 hover:border-slate-700'
                   }`}
                 >
@@ -327,7 +327,7 @@ export default function OnboardingWizard() {
                     onClick={() => toggleChannel(item.id)}
                     className={`p-4 rounded-xl border text-left transition-all ${
                       selected
-                        ? 'bg-sky-600/10 border-sky-500 text-slate-100 shadow-lg shadow-sky-500/10'
+                        ? 'bg-sky-600/10 border-sky-500 text-white shadow-lg shadow-sky-500/10'
                         : 'bg-slate-950 border-slate-800/80 text-slate-400 hover:border-slate-700'
                     }`}
                   >
@@ -375,7 +375,7 @@ export default function OnboardingWizard() {
                   onClick={() => setPrimaryGoal(item.id)}
                   className={`w-full p-4 rounded-xl border text-left transition-all ${
                     primaryGoal === item.id
-                      ? 'bg-sky-600/10 border-sky-500 text-slate-100 shadow-lg shadow-sky-500/10'
+                      ? 'bg-sky-600/10 border-sky-500 text-white shadow-lg shadow-sky-500/10'
                       : 'bg-slate-950 border-slate-800/80 text-slate-400 hover:border-slate-700'
                   }`}
                 >
@@ -441,7 +441,7 @@ export default function OnboardingWizard() {
               </button>
               <button
                 onClick={handleRunAnalysis}
-                className="px-6 py-2.5 bg-sky-400 hover:bg-sky-300 text-slate-950 font-semibold text-xs rounded-lg flex items-center gap-2 shadow-sm btn-tactile transition-colors"
+                className="px-6 py-2.5 bg-sky-400 hover:bg-sky-300 text-sky-950 font-semibold text-xs rounded-lg flex items-center gap-2 shadow-sm btn-tactile transition-colors"
               >
                 <Sparkles className="w-4 h-4" /> Synthesize Brand Profile & Campaign
               </button>
@@ -474,7 +474,7 @@ export default function OnboardingWizard() {
 
             <button
               onClick={handleCompleteOnboarding}
-              className="w-full py-3 bg-sky-400 hover:bg-sky-300 text-slate-950 font-semibold text-sm rounded-lg shadow-sm flex items-center justify-center gap-2 btn-tactile transition-colors"
+              className="w-full py-3 bg-sky-400 hover:bg-sky-300 text-sky-950 font-semibold text-sm rounded-lg shadow-sm flex items-center justify-center gap-2 btn-tactile transition-colors"
             >
               <span>Launch Workspace Dashboard</span>
               <Rocket className="w-4 h-4" />

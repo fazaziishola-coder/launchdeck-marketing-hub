@@ -45,7 +45,9 @@ export default function ContentCalendarPage() {
               key={mode}
               onClick={() => setViewMode(mode)}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                viewMode === mode ? 'bg-sky-600 text-white' : 'text-slate-400 hover:text-slate-200'
+                viewMode === mode
+                  ? 'bg-sky-600 text-white'
+                  : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               {mode}

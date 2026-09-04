@@ -99,12 +99,12 @@ export default function BrandHubPage() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold bg-sky-400 hover:bg-sky-300 text-slate-950 transition-colors btn-tactile shadow-sm disabled:opacity-50"
+            className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold bg-sky-400 hover:bg-sky-300 text-sky-950 transition-colors btn-tactile shadow-sm disabled:opacity-50"
           >
             {saving ? (
               <RefreshCw className="w-3.5 h-3.5 animate-spin" />
             ) : saved ? (
-              <Check className="w-3.5 h-3.5 text-slate-950" />
+              <Check className="w-3.5 h-3.5 text-sky-950" />
             ) : (
               <Save className="w-3.5 h-3.5" />
             )}

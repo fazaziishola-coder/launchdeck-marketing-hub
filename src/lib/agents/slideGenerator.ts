@@ -95,7 +95,7 @@ function createRuleBasedSlideDeck(
         '2️⃣ Real-time Metrics & Social Inbox Tracking',
         '3️⃣ Autonomous Background Autopilot Loops',
       ],
-      themeColor: 'from-purple-600 to-indigo-600',
+      themeColor: 'from-blue-600 to-cyan-600',
     },
     {
       slideNumber: 5,
