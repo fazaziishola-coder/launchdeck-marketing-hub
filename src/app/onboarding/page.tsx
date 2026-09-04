@@ -139,7 +139,7 @@ export default function OnboardingWizard() {
 
         <div className="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">
           <div
-            className="bg-gradient-to-r from-sky-500 to-indigo-500 h-1.5 rounded-full transition-all duration-300"
+            className="bg-sky-400 h-1.5 rounded-full transition-all duration-300"
             style={{ width: `${(step / 6) * 100}%` }}
           ></div>
         </div>
@@ -441,7 +441,7 @@ export default function OnboardingWizard() {
               </button>
               <button
                 onClick={handleRunAnalysis}
-                className="px-6 py-2.5 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl flex items-center gap-2 shadow-lg shadow-sky-600/20"
+                className="px-6 py-2.5 bg-sky-400 hover:bg-sky-300 text-slate-950 font-semibold text-xs rounded-lg flex items-center gap-2 shadow-sm btn-tactile transition-colors"
               >
                 <Sparkles className="w-4 h-4" /> Synthesize Brand Profile & Campaign
               </button>
@@ -450,23 +450,23 @@ export default function OnboardingWizard() {
         )}
 
         {step === 6 && (
-          <div className="p-8 rounded-2xl bg-slate-900 border border-slate-800 space-y-6">
+          <div className="p-8 rounded-xl bg-[#0c0f18] border border-white/[0.08] space-y-6">
             <div>
               <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase tracking-wider mb-1">
                 <ShieldCheck className="w-4 h-4" /> AI Brand Profile & Initial Campaign Ready
               </div>
-              <h2 className="text-2xl font-extrabold text-slate-100">Welcome to LaunchDeck OS</h2>
+              <h2 className="text-2xl font-bold text-slate-100 tracking-tight">Welcome to LaunchDeck OS</h2>
               <p className="text-sm text-slate-400 mt-1">Your AI Brand Source of Truth and initial launch campaign have been generated.</p>
             </div>
 
             {synthesizedBrand && (
-              <div className="space-y-3 p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs">
+              <div className="space-y-3 p-4 rounded-lg bg-[#080a11] border border-white/[0.06] text-xs">
                 <div>
-                  <span className="text-slate-500 block uppercase text-[10px]">Brand Tagline</span>
+                  <span className="text-slate-500 block uppercase text-[10px] font-mono">Brand Tagline</span>
                   <span className="text-slate-200 font-semibold">{synthesizedBrand.tagline}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block uppercase text-[10px]">Content Pillars</span>
+                  <span className="text-slate-500 block uppercase text-[10px] font-mono">Content Pillars</span>
                   <span className="text-sky-400">{synthesizedBrand.contentPillars}</span>
                 </div>
               </div>
@@ -474,9 +474,10 @@ export default function OnboardingWizard() {
 
             <button
               onClick={handleCompleteOnboarding}
-              className="w-full py-3.5 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-bold text-sm rounded-xl shadow-xl shadow-sky-600/20 flex items-center justify-center gap-2"
+              className="w-full py-3 bg-sky-400 hover:bg-sky-300 text-slate-950 font-semibold text-sm rounded-lg shadow-sm flex items-center justify-center gap-2 btn-tactile transition-colors"
             >
-              Launch Workspace Dashboard <Rocket className="w-4 h-4" />
+              <span>Launch Workspace Dashboard</span>
+              <Rocket className="w-4 h-4" />
             </button>
           </div>
         )}

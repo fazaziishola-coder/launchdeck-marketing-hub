@@ -116,28 +116,34 @@ export default function AutopilotPage() {
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-100 tracking-tight flex items-center gap-3">
-            <Zap className="w-8 h-8 text-amber-400 fill-amber-400/20" /> Autopilot Business Engine
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-sky-400 mb-1.5">
+            <Zap className="w-4 h-4" />
+            <span>Autonomous Operations</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-100 tracking-tight">
+            Autopilot Engine
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
-            Fully automated project discovery, Multi-LLM quota failover, Gemini slide generation, auto-posting, and engagement.
+          <p className="text-slate-400 text-xs sm:text-sm mt-1">
+            Automated project discovery, multi-LLM quota failover, slide synthesis, and scheduled distribution.
           </p>
         </div>
 
         <button
           onClick={handleRunFullAutopilot}
           disabled={runningAutopilot}
-          className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-sm font-bold bg-gradient-to-r from-amber-500 to-sky-600 hover:from-amber-400 hover:to-sky-500 text-slate-950 shadow-xl shadow-amber-500/20 transition-all duration-200"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold bg-sky-400 hover:bg-sky-300 text-slate-950 shadow-sm transition-colors btn-tactile disabled:opacity-50"
         >
           {runningAutopilot ? (
             <>
-              <RefreshCw className="w-5 h-5 animate-spin" /> Running Business Autopilot Loop...
+              <RefreshCw className="w-4 h-4 animate-spin" />
+              <span>Executing Autopilot Loop...</span>
             </>
           ) : (
             <>
-              <Play className="w-5 h-5 fill-slate-950" /> Run Autonomous Business Autopilot Loop
+              <Play className="w-3.5 h-3.5 fill-slate-950" />
+              <span>Run Autopilot Loop</span>
             </>
           )}
         </button>
@@ -287,7 +293,7 @@ export default function AutopilotPage() {
             <button
               onClick={handleGenerateSlides}
               disabled={generatingSlides || !selectedProductId}
-              className="w-full py-2.5 bg-gradient-to-r from-amber-500 to-indigo-600 hover:from-amber-400 hover:to-indigo-500 text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-amber-500/10 flex items-center justify-center gap-2 mb-4"
+              className="w-full py-2.5 bg-sky-400 hover:bg-sky-300 disabled:opacity-50 text-slate-950 font-semibold text-xs rounded-lg shadow-sm flex items-center justify-center gap-2 mb-4 btn-tactile transition-colors"
             >
               {generatingSlides ? (
                 <>

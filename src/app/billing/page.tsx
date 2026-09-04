@@ -83,7 +83,7 @@ export default function BillingPage() {
 
         <div className="w-full bg-slate-950 h-3 rounded-full overflow-hidden border border-slate-800">
           <div
-            className="bg-gradient-to-r from-sky-500 to-emerald-500 h-3 rounded-full"
+            className="bg-sky-400 h-3 rounded-full"
             style={{ width: `${(creditsUsed / creditLimit) * 100}%` }}
           ></div>
         </div>

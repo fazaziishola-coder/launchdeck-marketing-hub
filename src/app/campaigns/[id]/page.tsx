@@ -63,9 +63,10 @@ export default function CampaignDetailWorkspace() {
 
           <Link
             href={`/content?campaignId=${campaign.id}`}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-sky-600/20"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-sky-400 hover:bg-sky-300 text-slate-950 font-semibold text-xs rounded-lg shadow-sm btn-tactile transition-colors"
           >
-            <Sparkles className="w-4 h-4" /> Generate Campaign Content
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Generate Content</span>
           </Link>
         </div>
       </div>
